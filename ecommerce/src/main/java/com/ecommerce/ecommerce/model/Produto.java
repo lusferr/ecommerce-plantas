@@ -10,6 +10,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 
@@ -29,9 +30,9 @@ public class Produto {
 	@Size(min = 1, max  =700)
 	private String descricao;
 	
-	@NotBlank(message = "Esse campo deve ter pelo menos 1 caracter")
-	@Size(min = 1, max  =50)
-	private long preco;
+	@NotNull(message = "Esse campo deve ter pelo menos 1 caracter")
+	@Size(min = 1, max  =100)
+	private String preco;
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date date = new java.sql.Date(System.currentTimeMillis());
@@ -60,11 +61,11 @@ public class Produto {
 		this.descricao = descricao;
 	}
 
-	public long getPreco() {
+	public String getPreco() {
 		return preco;
 	}
 
-	public void setPreco(long preco) {
+	public void setPreco(String preco) {
 		this.preco = preco;
 	}
 
