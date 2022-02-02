@@ -15,47 +15,48 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ecommerce.ecommerce.model.Status;
-import com.ecommerce.ecommerce.repository.StatusRepository;
+import com.ecommerce.ecommerce.model.ValorStatus;
+import com.ecommerce.ecommerce.repository.ValorStatusRepository;
 
 @RestController
-@RequestMapping("/status")
+@RequestMapping("/valor-status")
 @CrossOrigin("*")
-public class StatusController {
+public class ValorStatusController {
 
 	@Autowired
-	private StatusRepository repository;
+	private ValorStatusRepository repository;
 	
 	@GetMapping
-	public ResponseEntity<List<Status>> getAll(){
+	public ResponseEntity<List<ValorStatus>> GetAll(){
 		return ResponseEntity.ok(repository.findAll());
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<Status> GetById(@PathVariable long id){
+	public ResponseEntity<ValorStatus> GetByIdValorStatus(@PathVariable long id){
 		return repository.findById(id)
 				.map(resp -> ResponseEntity.ok(resp))
 				.orElse(ResponseEntity.notFound().build());
 	}
 	
-	@GetMapping("/nomeStatus/{nomeStatus}")
-	public ResponseEntity<List<Status>> GetByNomeStatus(@PathVariable String nomeStatus){
-		return ResponseEntity.ok(repository.findAllByNomeStatusContainingIgnoreCase(nomeStatus));
+	@GetMapping("/valorStatus/{valorStatus}")
+	public ResponseEntity<List<ValorStatus>> GetByNomeValorStatus(@PathVariable String valorStatus){
+		return ResponseEntity.ok(repository.findAllByValorStatusContainingIgnoreCase(valorStatus));
 	}
 	
+	
 	@PostMapping
-	public ResponseEntity<Status> postStatus (@RequestBody Status status){
-		return ResponseEntity.status(HttpStatus.CREATED).body(repository.save(status));
+	public ResponseEntity<ValorStatus> postValorStatus (@RequestBody ValorStatus valorStatus){
+		return ResponseEntity.status(HttpStatus.CREATED).body(repository.save(valorStatus));
 	}
 	
 	@PutMapping
-	public ResponseEntity<Status> putStatus (@RequestBody Status status){
-		return ResponseEntity.status(HttpStatus.OK).body(repository.save(status));
+	public ResponseEntity<ValorStatus> putValorStatus (@RequestBody ValorStatus valorStatus){
+		return ResponseEntity.status(HttpStatus.OK).body(repository.save(valorStatus));
 	}
 	
 	@DeleteMapping("/{id}")
-	public void deleteStatus(@PathVariable long id) {
+	public void deleteValorStatus(@PathVariable long id) {
 		repository.deleteById(id);
 	}
-	
+
 }
