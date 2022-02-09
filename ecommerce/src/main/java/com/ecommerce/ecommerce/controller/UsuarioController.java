@@ -1,6 +1,9 @@
 package com.ecommerce.ecommerce.controller;
 
 import java.util.List;
+import java.util.Optional;
+
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,14 +18,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
+import com.ecommerce.ecommerce.model.UserLogin;
 import com.ecommerce.ecommerce.model.Usuario;
 import com.ecommerce.ecommerce.repository.UsuarioRepository;
+import com.ecommerce.ecommerce.service.UsuarioService;
 
 @RestController
 @RequestMapping("/usuario")
 @CrossOrigin("*")
 public class UsuarioController {
+	
+	@Autowired
+	private UsuarioService usuarioService;
 
 	@Autowired
 	private UsuarioRepository repository;
@@ -39,14 +46,24 @@ public class UsuarioController {
 				.orElse(ResponseEntity.notFound().build());
 	}
 	
-	@PostMapping
-	public ResponseEntity<Usuario> postUsuario (@RequestBody Usuario usuario){
-		return ResponseEntity.status(HttpStatus.CREATED).body(repository.save(usuario));
+	@PostMapping("/logar")
+	public ResponseEntity<UserLogin> loginUsuario (@RequestBody Optional<UserLogin> user){
+		return usuarioService.autenticarUsuario(user).map(resp -> ResponseEntity.status(HttpStatus.OK).body(resp))
+				.orElse(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
 	}
 	
-	@PutMapping
-	public ResponseEntity<Usuario> putUsuario (@RequestBody Usuario usuario){
-		return ResponseEntity.status(HttpStatus.OK).body(repository.save(usuario));
+	@PostMapping("/cadastrar")
+	public ResponseEntity<Usuario> postUsuario(@Valid @RequestBody Usuario usuario) {
+		return usuarioService.cadastrarUsuario(usuario)
+				.map(resp -> ResponseEntity.status(HttpStatus.CREATED).body(resp))
+				.orElse(ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
+	}
+	
+	@PutMapping("/atualizar")
+	public ResponseEntity<Usuario> putUsuario(@Valid @RequestBody Usuario usuario) {
+		return usuarioService.atualizarUsuario(usuario).map(resp -> ResponseEntity.status(HttpStatus.OK).body(resp))
+				.orElse(ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
+
 	}
 	
 	@DeleteMapping("/{id}")
